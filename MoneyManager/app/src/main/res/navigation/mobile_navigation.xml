@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_budget">
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.moneymanager.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_budget"
+        android:name="com.example.moneymanager.ui.home.BudgetFragment"
+        android:label="@string/title_budget"
+        tools:layout="@layout/fragment_budget" />
+
+    <fragment
+        android:id="@+id/navigation_spending"
+        android:name="com.example.moneymanager.ui.spending.SpendingFragment"
+        android:label="@string/title_spending"
+        tools:layout="@layout/fragment_spending" />
+
+    <fragment
+        android:id="@+id/navigation_balances"
+        android:name="com.example.moneymanager.ui.balances.BalancesFragment"
+        android:label="@string/title_balances"
+        tools:layout="@layout/fragment_balances" />
+
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.example.moneymanager.ui.messages.MessagesFragment"
+        android:label="@string/title_messages"
+        tools:layout="@layout/fragment_messages" />
+</navigation>

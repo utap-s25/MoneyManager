@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Money Manager</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_budget">Budget</string>
+    <string name="title_spending">Spending</string>
+    <string name="title_balances">Balances</string>
+    <string name="title_account">Account</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_settings">Settings</string>
+</resources>
