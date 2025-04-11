@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_dashboard_black_197dp_256dp"
         android:title="@string/title_dashboard" />
 
     <item
         android:id="@+id/navigation_budget"
-        android:icon="@drawable/ic_budget_black_24dp"
+        android:icon="@drawable/ic_budget_black_500dp"
         android:title="@string/title_budget" />
 
     <item
         android:id="@+id/navigation_spending"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_spending_black_500dp"
         android:title="@string/title_spending" />
 
     <item
         android:id="@+id/navigation_balances"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_balances_black_200dp"
         android:title="@string/title_balances" />
 
     <item

@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.moneymanager.databinding.FragmentDashboardBinding
+import com.example.moneymanager.databinding.FragmentBalancesBinding
 
 class BalancesFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentBalancesBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,10 +25,10 @@ class BalancesFragment : Fragment() {
         val balancesViewModel =
             ViewModelProvider(this).get(BalancesViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentBalancesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
+        val textView: TextView = binding.textBalances
         balancesViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
