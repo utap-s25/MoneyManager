@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_budget"
-        android:name="com.example.moneymanager.ui.home.BudgetFragment"
+        android:name="com.example.moneymanager.ui.budget.BudgetFragment"
         android:label="@string/title_budget"
         tools:layout="@layout/fragment_budget" />
 
