@@ -1,9 +1,9 @@
 package com.example.moneymanager.database
 
-data class Transaction(
+data class LocalTransaction(
     val id: Int,
     val amount: Double,
     val description: String,
-    val date: Long,
-    val type: String
+    val date: String,
+    val category: String
 )

@@ -7,22 +7,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.moneymanager.databinding.FragmentSpendingBinding
-import com.example.moneymanager.repositories.TransactionRepository
+import com.example.moneymanager.api.TransactionRepository
+import kotlinx.coroutines.launch
 
 class SpendingFragment : Fragment() {
 
     private var _binding: FragmentSpendingBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private lateinit var transactionRepository: TransactionRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         val spendingViewModel =
             ViewModelProvider(this).get(SpendingViewModel::class.java)
 
@@ -34,18 +35,19 @@ class SpendingFragment : Fragment() {
             textView.text = it
         }
 
-        val repo = TransactionRepository(requireContext())
+        transactionRepository = TransactionRepository(/* Pass TransactionApi instance here */)
 
-        // Insert a transaction
-        repo.insertTransaction(100.0, "Groceries", System.currentTimeMillis(), "Expense")
-        repo.insertTransaction(120.0, "Haircut", System.currentTimeMillis(), "Expense")
-        repo.insertTransaction(2400.0, "GPU", System.currentTimeMillis(), "Expense")
-
-        // Get all transactions
-        val transactions = repo.getAllTransactions()
-        for (transaction in transactions) {
-            println(transaction)
+        // Fetch transactions (example usage)
+        lifecycleScope.launch {
+            val userGuid = "some_user_guid"
+            val memberGuid = "some_member_guid"
+            val transactions = transactionRepository.getTransactionsByMember(userGuid, memberGuid)
+            // Now you can use 'transactions' (e.g., display them in a RecyclerView)
+            for (transaction in transactions) {
+                println(transaction)  // This will print each transaction's details
+            }
         }
+
         return root
     }
 
