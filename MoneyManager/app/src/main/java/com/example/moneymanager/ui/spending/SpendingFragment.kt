@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.moneymanager.databinding.FragmentSpendingBinding
+import com.example.moneymanager.repositories.TransactionRepository
 
 class SpendingFragment : Fragment() {
 
@@ -31,6 +32,19 @@ class SpendingFragment : Fragment() {
         val textView: TextView = binding.textSpending
         spendingViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }
+
+        val repo = TransactionRepository(requireContext())
+
+        // Insert a transaction
+        repo.insertTransaction(100.0, "Groceries", System.currentTimeMillis(), "Expense")
+        repo.insertTransaction(120.0, "Haircut", System.currentTimeMillis(), "Expense")
+        repo.insertTransaction(2400.0, "GPU", System.currentTimeMillis(), "Expense")
+
+        // Get all transactions
+        val transactions = repo.getAllTransactions()
+        for (transaction in transactions) {
+            println(transaction)
         }
         return root
     }
