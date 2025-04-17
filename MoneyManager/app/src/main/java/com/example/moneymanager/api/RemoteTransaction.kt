@@ -1,4 +1,4 @@
-package edu.cs371m.budget.api
+package com.example.moneymanager.api
 
 data class RemoteTransaction(
     val guid: String,

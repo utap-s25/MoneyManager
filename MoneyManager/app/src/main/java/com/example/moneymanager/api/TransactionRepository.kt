@@ -1,7 +1,7 @@
 package com.example.moneymanager.api
 
 import com.example.moneymanager.database.LocalTransaction as LocalTransaction
-import edu.cs371m.budget.api.TransactionApi
+import com.example.moneymanager.api.TransactionApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
