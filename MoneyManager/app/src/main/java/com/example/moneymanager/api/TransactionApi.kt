@@ -15,14 +15,23 @@ import com.example.moneymanager.database.LocalTransaction as LocalTransaction
 
 interface TransactionApi {
 
+    // Get transactions for a specific account
     @GET("users/{user_guid}/members/{member_guid}/transactions")
     suspend fun getTransactionsByMember(
         @Path("user_guid") userGuid: String,
-        @Path("member_guid") memberGuid: String,
+        @Path("member_guid") member_guid: String,
         @Query("from_date") fromDate: String? = null,
         @Query("to_date") toDate: String? = null,
         @Query("page") page: Int? = null,
         @Query("records_per_page") recordsPerPage: Int? = null
+    ): TransactionResponse
+
+    // Create a transaction for a specific account
+    @POST("users/{user_guid}/accounts/{account_guid}/transactions")
+    suspend fun createTransaction(
+        @Path("user_guid") userGuid: String,
+        @Path("account_guid") accountGuid: String,
+        @Body body: TransactionBody
     ): TransactionResponse
 
     @POST("users")
@@ -43,7 +52,26 @@ interface TransactionApi {
         @Path("member_guid") memberGuid: String
     )
 
-    // Data classes
+    // Data classes for creating transactions
+    data class TransactionBody(
+        val transaction: Transaction
+    )
+
+    data class Transaction(
+        val amount: Double,
+        val date: String,
+        val description: String,
+        val type: String,
+        val category_guid: String,
+        val currency_code: String,
+        val has_been_viewed: Boolean,
+        val is_hidden: Boolean,
+        val is_international: Boolean,
+        val memo: String,
+        val metadata: String,
+        val skip_webhook: Boolean
+    )
+
     data class CreateUserBody(val user: Map<String, String>)
     data class CreateUserResponse(val user: MXUser)
     data class MXUser(val guid: String)
@@ -55,7 +83,6 @@ interface TransactionApi {
     data class CreateMemberBody(val member: Map<String, Any>)
     data class MemberResponse(val member: MXMember)
     data class MXMember(val guid: String)
-
 
     class TransactionResponse(val transactions: List<LocalTransaction>)
 
