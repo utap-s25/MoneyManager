@@ -15,7 +15,8 @@ class TransactionDatabaseHelper(context: Context) :
                 $COLUMN_AMOUNT REAL,
                 $COLUMN_DESCRIPTION TEXT,
                 $COLUMN_DATE INTEGER,
-                $COLUMN_TYPE TEXT
+                $COLUMN_TYPE TEXT,
+                $COLUMN_GUID TEXT UNIQUE
             );
         """.trimIndent()
         db.execSQL(createTableStatement)
@@ -34,7 +35,7 @@ class TransactionDatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "transactions.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         const val TABLE_TRANSACTIONS = "transactions"
         const val COLUMN_ID = "id"
@@ -42,5 +43,6 @@ class TransactionDatabaseHelper(context: Context) :
         const val COLUMN_DESCRIPTION = "description"
         const val COLUMN_DATE = "date"
         const val COLUMN_TYPE = "type"
+        const val COLUMN_GUID = "guid"
     }
 }

@@ -19,7 +19,8 @@ class TransactionRepository(private val transactionApi: TransactionApi) {
                         amount = remoteTransaction.amount,
                         description = remoteTransaction.description ?: "No Description",
                         date = remoteTransaction.date,
-                        category = remoteTransaction.category ?: "Unknown" // Accessing category here
+                        category = remoteTransaction.category ?: "Unknown", // Accessing category here
+                        guid = remoteTransaction.guid
                     )
                 }
             } catch (e: Exception) {

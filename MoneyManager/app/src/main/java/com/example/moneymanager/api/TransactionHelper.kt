@@ -30,7 +30,8 @@ class TransactionHelper {
                         amount = it.amount,
                         description = it.description ?: "No Description",
                         date = it.date,
-                        category = it.category ?: "Unknown"
+                        category = it.category ?: "Unknown",
+                        guid = it.guid
                     )
                 } ?: emptyList()
 

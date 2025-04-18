@@ -5,5 +5,6 @@ data class LocalTransaction(
     val amount: Double,
     val description: String,
     val date: String,
-    val category: String
+    val category: String,
+    val guid: String
 )
