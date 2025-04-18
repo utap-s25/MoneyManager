@@ -1,19 +1,25 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_spending"
+    <!-- Spinner goes here -->
+    <Spinner
+        android:id="@+id/month_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Spending Fragment" />
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown" />
 
+
+    <!-- RecyclerView below -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/transactionsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

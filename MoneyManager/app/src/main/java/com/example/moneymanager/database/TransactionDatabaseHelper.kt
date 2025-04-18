@@ -14,7 +14,7 @@ class TransactionDatabaseHelper(context: Context) :
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_AMOUNT REAL,
                 $COLUMN_DESCRIPTION TEXT,
-                $COLUMN_DATE INTEGER,
+                $COLUMN_DATE LONG,
                 $COLUMN_TYPE TEXT,
                 $COLUMN_GUID TEXT UNIQUE
             );

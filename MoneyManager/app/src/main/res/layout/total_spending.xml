@@ -7,7 +7,7 @@
     android:background="@drawable/solid_border"
     android:weightSum="3">
 
-    <!-- Left: Date + Description -->
+    <!-- Left: Month + Label -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -15,46 +15,31 @@
         android:orientation="vertical"
         android:gravity="start">
 
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="04/15"
-            android:textSize="12sp"
-            android:textColor="#888888" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/label_total_spending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Amazon.com"
-            android:textSize="14sp"
-            android:textColor="#000000" />
+            android:text="TOTAL SPENDING"
+            android:textSize="20sp"
+            android:textColor="#555555" />
     </LinearLayout>
 
-    <!-- Right: Category above Amount -->
+    <!-- Right: Amount at bottom -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="end"
+        android:gravity="bottom|end"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/category"
+            android:id="@+id/month_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dining"
-            android:textColor="#555555"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-$24.99"
+            android:text="$512.47"
+            android:textSize="20sp"
             android:textColor="#D32F2F"
-            android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 
