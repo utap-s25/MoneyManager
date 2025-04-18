@@ -11,6 +11,9 @@ import com.example.moneymanager.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
 
+import com.example.moneymanager.ui.budget.BudgetViewModel
+import androidx.lifecycle.ViewModelProvider
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
