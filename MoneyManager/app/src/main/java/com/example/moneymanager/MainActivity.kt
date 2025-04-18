@@ -20,6 +20,9 @@ import com.example.moneymanager.repositories.Transaction
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+import com.example.moneymanager.ui.budget.BudgetViewModel
+import androidx.lifecycle.ViewModelProvider
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

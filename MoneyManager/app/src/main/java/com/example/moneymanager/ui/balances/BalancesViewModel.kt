@@ -10,4 +10,14 @@ class BalancesViewModel : ViewModel() {
         value = "This is the Balances Fragment"
     }
     val text: LiveData<String> = _text
+
+    private val _totalBalance = MutableLiveData<Float>().apply {
+        value = 0f
+    }
+
+    fun setTotalBalance(totalBalance: Float) {
+        _totalBalance.value = totalBalance
+    }
+
+    val totalBalance: LiveData<Float> = _totalBalance
 }
