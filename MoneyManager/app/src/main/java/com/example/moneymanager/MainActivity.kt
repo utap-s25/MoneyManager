@@ -17,6 +17,8 @@ import com.example.moneymanager.api.TransactionHelper
 import android.util.Log
 import com.example.moneymanager.database.TransactionDatabaseHelper
 import com.example.moneymanager.repositories.Transaction
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,14 +59,35 @@ class MainActivity : AppCompatActivity() {
                 val transactions = transactionHelper.setupAndFetchTestTransactions(api)
                 Log.d("MainActivity", "Fetched ${transactions.size} test transactions")
 
+                // Adjusted SimpleDateFormat for the format "yyyy-MM-dd"
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+                // Formatter for converting Long back to "MMM dd, yyyy" for debugging
+                val displayDateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.US)
+
                 transactions.forEach { txn ->
+                    // Convert the date string to a Long timestamp
+                    val parsedDate = try {
+                        dateFormatter.parse(txn.date)?.time ?: System.currentTimeMillis()
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Failed to parse date: ${txn.date}", e)
+                        System.currentTimeMillis()
+                    }
+
+                    // Log the parsed date as Long
+                    Log.d("MainActivity", "Parsed date as Long: $parsedDate")
+
+                    // Convert Long back to "MMM dd, yyyy" for debugging
+                    val formattedDate = displayDateFormatter.format(parsedDate)
+                    Log.d("MainActivity", "Converted back to formatted date: $formattedDate")
+
+                    // Insert the transaction with the parsed date as Long
                     transactionRepo.insertTransaction(
                         amount = txn.amount,
                         description = txn.description,
-                        date = txn.date.toLongOrNull() ?: System.currentTimeMillis(),
+                        date = parsedDate,
                         type = txn.category,
                         guid = txn.guid
-
                     )
                 }
 
@@ -74,5 +97,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

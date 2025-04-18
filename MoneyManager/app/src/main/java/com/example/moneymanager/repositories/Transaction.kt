@@ -44,9 +44,6 @@ class Transaction(context: Context) {
                 val dateFormatted = dateFormatter.format(Date(dateLong))
                 val type = getString(getColumnIndexOrThrow(TransactionDatabaseHelper.COLUMN_TYPE))
                 val guid = getString(getColumnIndexOrThrow(TransactionDatabaseHelper.COLUMN_GUID))
-
-                Log.d("TransactionRepo", "Raw dateLong: $dateLong, Formatted: $dateFormatted")
-
                 transactions.add(LocalTransaction(id, amount, description, dateFormatted, type, guid))
             }
             close()
@@ -54,5 +51,4 @@ class Transaction(context: Context) {
         db.close()
         return transactions
     }
-
 }

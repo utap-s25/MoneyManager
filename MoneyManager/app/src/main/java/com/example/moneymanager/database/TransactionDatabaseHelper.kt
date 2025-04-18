@@ -35,7 +35,7 @@ class TransactionDatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "transactions.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
 
         const val TABLE_TRANSACTIONS = "transactions"
         const val COLUMN_ID = "id"

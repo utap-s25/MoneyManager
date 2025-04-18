@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moneymanager.R
 import com.example.moneymanager.databinding.FragmentSpendingBinding
 import com.example.moneymanager.repositories.Transaction as TransactionRepo
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SpendingFragment : Fragment() {
 
@@ -37,12 +39,17 @@ class SpendingFragment : Fragment() {
         fun updateRecyclerForMonth(selectedMonth: String) {
             val filtered = if (selectedMonth.isEmpty()) {
                 allTransactions // Show all if no month is selected
-
             } else {
                 allTransactions.filter {
-                    // Extract the month from the transaction's date (assuming format "yyyy-MM-dd")
+                    // Format the transaction date to get the month abbreviation (e.g., "Apr")
+                    val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.US)
                     Log.d("SpendingFragment", "Checking transaction date: ${it.date}")
-                    it.date.substring(0,3) == selectedMonth
+                    val date = formatter.parse(it.date) // Assuming `it.date` is a string like "Apr 15, 2025"
+                    val monthAbbr = SimpleDateFormat("MMM", Locale.US).format(date)
+                    Log.d("SpendingFragment", "Checking transaction date: ${it.date}, Parsed month: $monthAbbr")
+
+                    // Compare the extracted month abbreviation with the selected one
+                    monthAbbr == selectedMonth
                 }
             }
             val total = filtered.sumOf { it.amount }
