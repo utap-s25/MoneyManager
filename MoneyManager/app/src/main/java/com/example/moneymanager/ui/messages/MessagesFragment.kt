@@ -37,6 +37,9 @@ class MessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId == receiverId) {
+            receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
+        }
         conversationId = if (currentUserId!! < receiverId) {
             "$currentUserId-$receiverId"
         } else {
@@ -44,7 +47,10 @@ class MessagesFragment : Fragment() {
         }
 
         adapter = MessageAdapter(messages, currentUserId!!)
-        binding.recyclerViewMessages.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewMessages.layoutManager = LinearLayoutManager(requireContext()).apply {
+            stackFromEnd = true
+            reverseLayout = false
+        }
         binding.recyclerViewMessages.adapter = adapter
 
         listenForMessages()
@@ -80,11 +86,12 @@ class MessagesFragment : Fragment() {
             .collection("messages")
             .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, _ ->
-                if (snapshot != null && binding != null) {
+                if (snapshot != null && _binding != null) {
                     messages.clear()
                     for (doc in snapshot.documents) {
                         doc.toObject(Message::class.java)?.let { messages.add(it) }
                     }
+                    messages.sortBy { it.timestamp }
                     adapter.notifyDataSetChanged()
                     binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
                 }
