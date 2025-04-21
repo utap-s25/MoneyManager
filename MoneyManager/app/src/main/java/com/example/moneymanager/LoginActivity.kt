@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moneymanager.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -42,6 +43,13 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        val userMap = hashMapOf("email" to auth.currentUser?.email)
+
+                        FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(auth.currentUser!!.uid)
+                            .set(userMap)
+
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
