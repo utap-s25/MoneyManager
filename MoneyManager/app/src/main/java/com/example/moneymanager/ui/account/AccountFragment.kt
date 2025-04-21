@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
+import android.content.Intent
 import com.example.moneymanager.databinding.FragmentAccountBinding
+import com.example.moneymanager.LoginActivity
 
 class AccountFragment : Fragment() {
 
@@ -31,6 +34,15 @@ class AccountFragment : Fragment() {
         val textView: TextView = binding.textAccount
         accountViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }
+
+        binding.buttonLogout.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+
+            // Redirect to login screen and clear back stack
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
         return root
     }

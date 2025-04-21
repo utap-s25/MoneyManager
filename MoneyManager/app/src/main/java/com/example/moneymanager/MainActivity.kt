@@ -24,6 +24,8 @@ import com.example.moneymanager.api.BudgetsHelper
 import com.example.moneymanager.repositories.Budget
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.view.Menu
+import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -141,5 +143,26 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Failed to fetch or insert data", e)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.top_app_bar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.navigation_account -> {
+                val navController = findNavController(R.id.nav_host_fragment_activity_main)
+                navController.navigate(R.id.navigation_account)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
