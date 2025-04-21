@@ -13,7 +13,7 @@ class SpendingViewModel : ViewModel() {
     private val _totalSpending = MutableLiveData<Float>().apply {
         value = 0f  // Default value
     }
-    val totalSpending: LiveData<Float> = _totalSpending
+    var totalSpending: LiveData<Float> = _totalSpending
 
     // LiveData to track the top 4 highest spending categories
     private val _topSpendingCategories = MutableLiveData<List<SpendingCategory>>().apply {
@@ -27,6 +27,9 @@ class SpendingViewModel : ViewModel() {
     }
     val miscellaneousSpending: LiveData<Float> = _miscellaneousSpending
 
+    fun updateTotalSpending(total: Float) {
+        _totalSpending.value = total
+    }
     // Function to update the spending categories
     fun updateSpendingCategories(categories: List<SpendingCategory>) {
         // Sort categories in descending order based on the amount

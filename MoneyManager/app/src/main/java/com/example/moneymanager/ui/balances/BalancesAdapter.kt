@@ -25,11 +25,14 @@ class AccountBalanceAdapter(private val accountList: List<LocalAccount>) :
 
     class AccountViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val balanceTextView: TextView = itemView.findViewById(R.id.accountAmountTextView)
-        private val typeTextView: TextView = itemView.findViewById(R.id.accountNameTextView)
+        private val typeTextView: TextView = itemView.findViewById(R.id.accountTypeTextView)
+        private val nameTextView: TextView = itemView.findViewById(R.id.accountNameTextView)
+
 
         fun bind(account: LocalAccount) {
             balanceTextView.text = "$${account.balance}"
             typeTextView.text = account.type
+            nameTextView.text = account.name
         }
     }
 }

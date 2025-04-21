@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -28,6 +29,7 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_TYPE TEXT,
                 $COLUMN_BALANCE REAL,
+                $COLUMN_NAME TEXT,
                 $COLUMN_GUID TEXT UNIQUE
             );
         """.trimIndent()
@@ -41,8 +43,8 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_NAME TEXT,
                 $COLUMN_PERCENT REAL,
                 $COLUMN_GUID TEXT UNIQUE,
-                $COLUMN_CATEGORY_ID INTEGER,
-                FOREIGN KEY($COLUMN_CATEGORY_ID) REFERENCES $TABLE_CATEGORY($COLUMN_ID)
+                $COLUMN_CATEGORY_ID TEXT,
+                FOREIGN KEY($COLUMN_CATEGORY_ID) REFERENCES $TABLE_CATEGORY($COLUMN_GUID)
             );
         """.trimIndent()
         db.execSQL(createBudgetsTable)
@@ -74,9 +76,10 @@ class DatabaseHelper(context: Context) :
     }
 
     private fun insertCategories(db: SQLiteDatabase?) {
+        Log.d("insertCategories", "insertingCategories")
         val categories = listOf(
             Category(0, "Auto & Transport", "CAT-7829f71c-2e8c-afa5-2f55-fa3634b89874"),
-            Category(0, "Auto & Transport", "CAT-7829f71c-2e8c-afa5-2f55-fa3634b89874"),
+            Category(0, "Unknown", "CAT-d7851c65-3353-e490-1953-fb9235e681e4"),
             Category(0, "Auto Insurance", "CAT-de7c2dc7-90e6-85a2-6509-5ec10942e887"),
             Category(0, "Auto Payment", "CAT-cb93691a-684d-b326-4c32-f8abaecfde90"),
             Category(0, "Gas", "CAT-b6d63a19-30a7-e852-2703-bdfb4072289e"),
@@ -110,11 +113,12 @@ class DatabaseHelper(context: Context) :
             }
             db?.insert(TABLE_CATEGORY, null, values)
         }
+
     }
 
     companion object {
         private const val DATABASE_NAME = "moneymanager.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 7
 
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_ACCOUNTS = "accounts"
@@ -130,7 +134,6 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_NAME = "name"
         const val COLUMN_PERCENT = "percent_spent"
         const val COLUMN_BALANCE = "balance"
-        const val COLUMN_BUDGET_ID = "budget_id"
         const val COLUMN_CATEGORY_ID = "category_id"
     }
 }
