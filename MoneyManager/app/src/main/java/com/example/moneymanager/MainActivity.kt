@@ -15,7 +15,10 @@ import kotlinx.coroutines.launch
 import com.example.moneymanager.api.TransactionApi
 import com.example.moneymanager.api.TransactionHelper
 import android.util.Log
+import com.example.moneymanager.api.AccountApi
 import com.example.moneymanager.repositories.Transaction
+import com.example.moneymanager.repositories.Accounts
+import com.example.moneymanager.api.AccountHelper
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -47,14 +50,17 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // 🔽 Fetch transactions on app start
+        // 🔽 Fetch transactions and accounts on app start
         val api = TransactionApi.create()
+        val accountApi = AccountApi.create()
+        val accountHelper = AccountHelper()
         val transactionHelper = TransactionHelper()
         val transactionRepo = Transaction(this)
-
+        val accountsRepo = Accounts(this)
 
         lifecycleScope.launch {
             try {
+                // Fetch transactions
                 val transactions = transactionHelper.setupAndFetchTestTransactions(api)
                 Log.d("MainActivity", "Fetched ${transactions.size} test transactions")
 
@@ -91,8 +97,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 Log.d("MainActivity", "Inserted transactions into local DB")
+
+                // Fetch accounts
+                val accounts = accountHelper.setupAndFetchAccounts(accountApi, "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c") // Fetch accounts from the API
+                Log.d("MainActivity", "Fetched ${accounts.size} accounts")
+
+                // Insert each account into the local database
+                accounts.forEach { account ->
+                    accountsRepo.insertAccount(
+                        type = account.type,
+                        balance = account.balance,
+                        guid = account.guid
+                    )
+                }
+
+                Log.d("MainActivity", "Inserted accounts into local DB")
             } catch (e: Exception) {
-                Log.e("MainActivity", "Failed to fetch or insert transactions", e)
+                Log.e("MainActivity", "Failed to fetch or insert data", e)
             }
         }
     }
