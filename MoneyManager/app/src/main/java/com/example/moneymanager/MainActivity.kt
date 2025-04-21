@@ -19,6 +19,9 @@ import com.example.moneymanager.api.AccountApi
 import com.example.moneymanager.repositories.Transaction
 import com.example.moneymanager.repositories.Accounts
 import com.example.moneymanager.api.AccountHelper
+import com.example.moneymanager.api.BudgetsApi
+import com.example.moneymanager.api.BudgetsHelper
+import com.example.moneymanager.repositories.Budget
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -57,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         val transactionHelper = TransactionHelper()
         val transactionRepo = Transaction(this)
         val accountsRepo = Accounts(this)
+        val budgetHelper = BudgetsHelper()
+        val budgetRepo = Budget(this)
+        val budgetApi = BudgetsApi.create()
 
         lifecycleScope.launch {
             try {
@@ -107,9 +113,28 @@ class MainActivity : AppCompatActivity() {
                     accountsRepo.insertAccount(
                         type = account.type,
                         balance = account.balance,
+                        name = account.name,
                         guid = account.guid
                     )
                 }
+
+
+
+                val budget = budgetHelper.setupAndFetchBudgets(budgetApi, "USR-57750651-ce65-4480-9999-fc57ed8b805a")
+                Log.d("MainActivity", "Fetched ${budget.size} budgets")
+
+                budget.forEach { budget ->
+                    Log.d("mainActivity", "${budget.categoryId}")
+                    budgetRepo.insertBudget(
+                        guid = budget.guid,
+                        name = budget.name,
+                        amount = budget.amount,
+                        percent = budget.percentSpent,
+                        categoryId = budget.categoryId
+                    )
+                }
+
+
 
                 Log.d("MainActivity", "Inserted accounts into local DB")
             } catch (e: Exception) {

@@ -1,9 +1,10 @@
 package com.example.moneymanager.database
 
-data class LocalAccount (
+data class LocalBudget(
     val id: Int,
     val guid: String,
-    val type: String,
     val name: String,
-    val balance: Double
+    val percentSpent: Double,
+    val amount: Double,
+    val categoryId: String
 )

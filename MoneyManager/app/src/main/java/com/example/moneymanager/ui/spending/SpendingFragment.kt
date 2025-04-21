@@ -53,19 +53,22 @@ class SpendingFragment : Fragment() {
                 }
             }
             val total = filtered.sumOf { it.amount }
+            Log.d("SpendingFragment", "$total")
+            spendingViewModel.updateTotalSpending(total.toFloat())
 
             val adapter = TransactionAdapter(filtered, "$%.2f".format(total))
             binding.transactionsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             binding.transactionsRecyclerView.adapter = adapter
         }
 
-        // 3. Initial load (show all)
-        updateRecyclerForMonth("")
-
-        // 4. Set up the spinner for month selection
+        // 3. Set up the spinner for month selection
         val spinner = root.findViewById<Spinner>(R.id.month_spinner)
         val months = resources.getStringArray(R.array.months_array) // Full month names (e.g., January, February)
         val abbrMonths = resources.getStringArray(R.array.months_abbr_array) // Abbreviations (e.g., Jan, Feb)
+
+        // Determine the current month and set it as default
+        val currentMonthAbbr = SimpleDateFormat("MMM", Locale.US).format(Date())
+        val currentMonthPosition = abbrMonths.indexOf(currentMonthAbbr)
 
         val adapter = ArrayAdapter(
             requireContext(), android.R.layout.simple_spinner_item, months
@@ -73,6 +76,9 @@ class SpendingFragment : Fragment() {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         spinner.adapter = adapter
+        updateRecyclerForMonth(currentMonthAbbr)
+        // Set the spinner's selected item to the current month
+        spinner.setSelection(currentMonthPosition)
 
         // Set up listener for spinner selection
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -87,6 +93,7 @@ class SpendingFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
 
         return root
     }

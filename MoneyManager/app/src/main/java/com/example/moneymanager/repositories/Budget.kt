@@ -2,114 +2,71 @@ package com.example.moneymanager.repositories
 
 import android.content.ContentValues
 import android.content.Context
-import com.example.moneymanager.database.BudgetDatabaseHelper
-import com.example.moneymanager.database.Category
-import com.example.moneymanager.database.Budget
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.COLUMN_BUDGET_ID
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.COLUMN_CATEGORY_ID
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.COLUMN_GUID
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.COLUMN_NAME
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.COLUMN_TOTAL
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.TABLE_BUDGET
-import com.example.moneymanager.database.BudgetDatabaseHelper.Companion.TABLE_CATEGORY
+import android.util.Log
+import com.example.moneymanager.database.LocalBudget
+import com.example.moneymanager.database.DatabaseHelper
 
 class Budget(context: Context) {
-    private val dbHelper = BudgetDatabaseHelper(context)
+    private val dbHelper = DatabaseHelper(context)
 
-    // Insert a new Category
-    fun insertCategory(name: String, guid: String) {
+    fun insertBudget(
+        guid: String,
+        name: String,
+        amount: Double,
+        percent: Double,
+        categoryId: String
+    ) {
         val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_NAME, name)
-            put(COLUMN_GUID, guid)
-        }
-        db.insert(TABLE_CATEGORY, null, values)
-        db.close()
-    }
-
-    // Insert a new Budget
-    fun insertBudget(total: Float, categoryId: Int) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_TOTAL, total)
-            put(COLUMN_CATEGORY_ID, categoryId)
-        }
-        db.insert(TABLE_BUDGET, null, values)
-        db.close()
-    }
-
-    // Get all categories
-    fun getAllCategories(): List<Category> {
-        val categories = mutableListOf<Category>()
-        val db = dbHelper.readableDatabase
-        val cursor = db.query(
-            TABLE_CATEGORY,
-            null, null, null, null, null,
-            "$COLUMN_NAME ASC"
+        val cursor = db.rawQuery(
+            "SELECT 1 FROM ${DatabaseHelper.TABLE_CATEGORY} WHERE ${DatabaseHelper.COLUMN_GUID} = ?",
+            arrayOf(categoryId)
         )
+        if (cursor.moveToFirst()) {
+            Log.d("insertBudget", "Category found for categoryId: $categoryId")
 
-        with(cursor) {
-            while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(BudgetDatabaseHelper.COLUMN_ID))
-                val name = getString(getColumnIndexOrThrow(COLUMN_NAME))
-                val guid = getString(getColumnIndexOrThrow(COLUMN_GUID))
-                categories.add(Category(id, name, guid))
+            val values = ContentValues().apply {
+                put(DatabaseHelper.COLUMN_GUID, guid)
+                put(DatabaseHelper.COLUMN_NAME, name)
+                put(DatabaseHelper.COLUMN_AMOUNT, amount)
+                put(DatabaseHelper.COLUMN_PERCENT, percent)
+                put(DatabaseHelper.COLUMN_CATEGORY_ID, categoryId)
             }
-            close()
+            db.insertWithOnConflict(
+                DatabaseHelper.TABLE_BUDGETS,
+                null,
+                values,
+                android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
+            )
+            Log.d("insertBudget", "Inserted budget for categoryId: $categoryId")
+        } else {
+            Log.e("insertBudget", "Category ID not found, skipping insert: $categoryId")
         }
+
+        cursor.close()
         db.close()
-        return categories
     }
 
-    // Get all budgets for a specific category
-    fun getBudgetsForCategory(categoryId: Int): List<Budget> {
-        val budgets = mutableListOf<Budget>()
+    fun getAllBudgets(): List<LocalBudget> {
+        val budgets = mutableListOf<LocalBudget>()
         val db = dbHelper.readableDatabase
         val cursor = db.query(
-            TABLE_BUDGET,
-            null,
-            "$COLUMN_CATEGORY_ID = ?",
-            arrayOf(categoryId.toString()),
-            null, null,
-            null
+            DatabaseHelper.TABLE_BUDGETS,
+            null, null, null, null, null, null
         )
 
         with(cursor) {
             while (moveToNext()) {
-                val budgetId = getInt(getColumnIndexOrThrow(COLUMN_BUDGET_ID))
-                val total = getFloat(getColumnIndexOrThrow(COLUMN_TOTAL))
-                val categoryId = getInt(getColumnIndexOrThrow(COLUMN_CATEGORY_ID))
-                budgets.add(Budget(budgetId, total, categoryId))
+                val id = getInt(getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+                val guid = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_GUID))
+                val name = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME))
+                val amount = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_AMOUNT))
+                val percent = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PERCENT))
+                val categoryId = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID))
+                budgets.add(LocalBudget(id, guid, name, amount, percent, categoryId))
             }
             close()
         }
         db.close()
         return budgets
-    }
-
-    // Get a specific Budget by its ID
-    fun getBudgetById(budgetId: Int): Budget? {
-        val db = dbHelper.readableDatabase
-        val cursor = db.query(
-            TABLE_BUDGET,
-            null,
-            "$COLUMN_BUDGET_ID = ?",
-            arrayOf(budgetId.toString()),
-            null, null,
-            null
-        )
-
-        var budget: Budget? = null
-        with(cursor) {
-            if (moveToFirst()) {
-                val id = getInt(getColumnIndexOrThrow(COLUMN_BUDGET_ID))
-                val total = getFloat(getColumnIndexOrThrow(COLUMN_TOTAL))
-                val categoryId = getInt(getColumnIndexOrThrow(COLUMN_CATEGORY_ID))
-                budget = Budget(id, total, categoryId)
-            }
-            close()
-        }
-        db.close()
-        return budget
     }
 }
