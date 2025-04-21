@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.text.DecimalFormat
 import com.example.moneymanager.repositories.Transaction as TransactionRepo
+import com.example.moneymanager.repositories.Accounts as AccountRepo
 
 class DashboardFragment : Fragment() {
 
@@ -233,7 +234,6 @@ class DashboardFragment : Fragment() {
     private fun createBalancesWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
         val balancesViewModel = ViewModelProvider(this).get(BalancesViewModel::class.java)
-
         val onCreateTotalBalance = balancesViewModel.totalBalance.value
         contentContainer.text = "$onCreateTotalBalance"
         balancesViewModel.totalBalance.observe(viewLifecycleOwner, Observer { totalBalance ->
@@ -245,6 +245,9 @@ class DashboardFragment : Fragment() {
                 contentContainer.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
             }
         })
+
+        val accountRepo = AccountRepo(requireContext())
+        balancesViewModel.setTotalBalance(accountRepo.getAccountsTotal())
 
         widgetView.setOnClickListener {
             // Navigate to the Balances screen

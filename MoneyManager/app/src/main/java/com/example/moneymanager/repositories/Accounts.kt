@@ -49,4 +49,25 @@ class Accounts(context: Context) {
         db.close()
         return accounts
     }
+
+    fun getAccountsTotal(): Float {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT SUM(${DatabaseHelper.COLUMN_BALANCE}) FROM ${DatabaseHelper.TABLE_ACCOUNTS}",
+            null
+        )
+
+        var total = 0.0f
+        if (cursor.moveToFirst()) {
+            total = cursor.getFloat(0)
+            Log.d("Accounts", "Total balance across all accounts: $total")
+        } else {
+            Log.d("Accounts", "No accounts found.")
+        }
+
+        cursor.close()
+        db.close()
+
+        return total
+    }
 }
