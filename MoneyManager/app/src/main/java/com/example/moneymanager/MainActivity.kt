@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import android.view.Menu
 import android.view.MenuItem
+import com.example.moneymanager.ui.messages.MessagesViewModel
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +40,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        var receiverId = "SWV6Vp1NeAVoAgKBjC1cM2iD9E13"
+        if (currentUser!!.uid == receiverId) {
+            receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
+        }
+
+        val messagesViewModel = ViewModelProvider(this).get(MessagesViewModel::class.java)
+        messagesViewModel.startListeningForMessages(currentUser.uid, receiverId)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

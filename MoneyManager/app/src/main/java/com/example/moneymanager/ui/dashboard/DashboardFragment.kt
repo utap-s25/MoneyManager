@@ -209,7 +209,6 @@ class DashboardFragment : Fragment() {
     private fun createSpendingWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
         val spendingViewModel = ViewModelProvider(this).get(SpendingViewModel::class.java)
-
         val onCreateTotalSpending = spendingViewModel.totalSpending.value
         contentContainer.text = "$onCreateTotalSpending"
         spendingViewModel.totalSpending.observe(viewLifecycleOwner, Observer { totalSpending ->

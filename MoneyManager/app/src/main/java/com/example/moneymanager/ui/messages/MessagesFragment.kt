@@ -44,6 +44,7 @@ class MessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Get the current user ID
+        // TODO PROBABLY NEED TO REMOVE THIS TOO
         currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserId == receiverId) {
             receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
@@ -83,8 +84,7 @@ class MessagesFragment : Fragment() {
             }
         }
 
-        // Listen for incoming messages
-        listenForMessages()
+        markMessagesAsRead()
     }
 
     private fun sendMessage(messageText: String) {
@@ -92,7 +92,8 @@ class MessagesFragment : Fragment() {
             "senderId" to currentUserId,
             "receiverId" to receiverId,
             "message" to messageText,
-            "timestamp" to System.currentTimeMillis()
+            "timestamp" to System.currentTimeMillis(),
+            "isRead" to false
         )
 
         FirebaseFirestore.getInstance()
@@ -102,22 +103,22 @@ class MessagesFragment : Fragment() {
             .add(message)
     }
 
-    private fun listenForMessages() {
+    private fun markMessagesAsRead() {
         FirebaseFirestore.getInstance()
             .collection("conversations")
             .document(conversationId)
             .collection("messages")
-            .orderBy("timestamp", Query.Direction.ASCENDING)
-            .addSnapshotListener { snapshot, _ ->
-                if (snapshot != null && _binding != null) {
-                    val newMessages = mutableListOf<Message>()
-                    for (doc in snapshot.documents) {
-                        doc.toObject(Message::class.java)?.let { newMessages.add(it) }
-                    }
-
-                    // Update the ViewModel with new messages
-                    viewModel.setMessages(newMessages)
+            .whereEqualTo("receiverId", currentUserId)
+            .whereEqualTo("isRead", false)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                for (doc in snapshot.documents) {
+                    doc.reference.update("isRead", true)
                 }
+                Log.d("MessagesFragment", "Marked ${snapshot.size()} messages as read")
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesFragment", "Failed to mark messages as read", e)
             }
     }
 
