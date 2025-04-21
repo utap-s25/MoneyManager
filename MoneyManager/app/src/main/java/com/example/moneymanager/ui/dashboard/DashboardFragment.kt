@@ -24,6 +24,7 @@ import com.example.moneymanager.ui.spending.SpendingCategory
 import java.text.SimpleDateFormat
 import java.util.*
 import java.text.DecimalFormat
+import com.example.moneymanager.repositories.Transaction as TransactionRepo
 
 class DashboardFragment : Fragment() {
 
@@ -211,11 +212,14 @@ class DashboardFragment : Fragment() {
         val spendingViewModel = ViewModelProvider(this).get(SpendingViewModel::class.java)
         val onCreateTotalSpending = spendingViewModel.totalSpending.value
         contentContainer.text = "$onCreateTotalSpending"
+
         spendingViewModel.totalSpending.observe(viewLifecycleOwner, Observer { totalSpending ->
             // Update the TextView with the current remaining budget value
             contentContainer.text = "$${decimalFormat.format(totalSpending)}"
             contentContainer.setTextColor(android.graphics.Color.RED)
         })
+
+        val transactionRepo = TransactionRepo(requireContext())
 
         widgetView.setOnClickListener {
             // Navigate to the Spending screen
