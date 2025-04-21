@@ -220,6 +220,7 @@ class DashboardFragment : Fragment() {
         })
 
         val transactionRepo = TransactionRepo(requireContext())
+        spendingViewModel.updateTotalSpending(transactionRepo.getCurrentMonthlySpending())
 
         widgetView.setOnClickListener {
             // Navigate to the Spending screen

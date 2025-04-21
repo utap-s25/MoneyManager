@@ -83,6 +83,7 @@ class Transaction(context: Context) {
         """.trimIndent(),
             arrayOf(monthStart.toString(), monthEnd.toString())
         )
+
         var total = 0f
         if (cursor.moveToFirst()) {
             total = cursor.getFloat(0)
