@@ -53,11 +53,19 @@ class MessagesViewModel : ViewModel() {
             .addSnapshotListener { snapshot, _ ->
                 if (snapshot != null) {
                     val newMessages = mutableListOf<Message>()
+                    var unreadCount = 0
+
                     for (doc in snapshot.documents) {
-                        doc.toObject(Message::class.java)?.let { newMessages.add(it) }
+                        doc.toObject(Message::class.java)?.let { msg ->
+                            newMessages.add(msg)
+                            if (!msg.isRead && msg.receiverId == currentUserId) {
+                                unreadCount++
+                            }
+                        }
                     }
 
                     _messages.postValue(newMessages)
+                    _newMessages.postValue(unreadCount)
                 }
             }
     }

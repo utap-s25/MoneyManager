@@ -115,6 +115,7 @@ class MessagesFragment : Fragment() {
                 for (doc in snapshot.documents) {
                     doc.reference.update("isRead", true)
                 }
+                viewModel.setNewMessages(0) // Reset LiveData
                 Log.d("MessagesFragment", "Marked ${snapshot.size()} messages as read")
             }
             .addOnFailureListener { e ->
