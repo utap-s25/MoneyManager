@@ -1,12 +1,16 @@
 package com.example.moneymanager.ui.messages
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import com.example.moneymanager.databinding.FragmentMessagesBinding
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moneymanager.databinding.FragmentMessagesBinding
 import com.example.moneymanager.message.Message
 import com.example.moneymanager.message.MessageAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +29,9 @@ class MessagesFragment : Fragment() {
     private var currentUserId: String? = null
     private lateinit var conversationId: String
 
+    // Use ViewModel to store data
+    private val viewModel: MessagesViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +43,7 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Get the current user ID
         currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserId == receiverId) {
             receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
@@ -46,6 +54,7 @@ class MessagesFragment : Fragment() {
             "$receiverId-$currentUserId"
         }
 
+        // Set up RecyclerView with adapter
         adapter = MessageAdapter(messages, currentUserId!!)
         binding.recyclerViewMessages.layoutManager = LinearLayoutManager(requireContext()).apply {
             stackFromEnd = true
@@ -53,15 +62,29 @@ class MessagesFragment : Fragment() {
         }
         binding.recyclerViewMessages.adapter = adapter
 
-        listenForMessages()
+        // Observe messages from the ViewModel
+        viewModel.messages.observe(viewLifecycleOwner, Observer { updatedMessages ->
+            messages.clear()
+            messages.addAll(updatedMessages)
+            adapter.notifyDataSetChanged()
+            binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+        })
 
+        binding.messageEditText.addTextChangedListener {
+            Log.d("Message", "Current input text: ${it.toString()}")
+        }
+
+        // Send button click listener
         binding.sendButton.setOnClickListener {
             val text = binding.messageEditText.text.toString()
             if (text.isNotBlank()) {
                 sendMessage(text)
-                binding.messageEditText.setText("")
+                binding.messageEditText.setText("") // Clear the input field
             }
         }
+
+        // Listen for incoming messages
+        listenForMessages()
     }
 
     private fun sendMessage(messageText: String) {
@@ -87,13 +110,13 @@ class MessagesFragment : Fragment() {
             .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, _ ->
                 if (snapshot != null && _binding != null) {
-                    messages.clear()
+                    val newMessages = mutableListOf<Message>()
                     for (doc in snapshot.documents) {
-                        doc.toObject(Message::class.java)?.let { messages.add(it) }
+                        doc.toObject(Message::class.java)?.let { newMessages.add(it) }
                     }
-                    messages.sortBy { it.timestamp }
-                    adapter.notifyDataSetChanged()
-                    binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+
+                    // Update the ViewModel with new messages
+                    viewModel.setMessages(newMessages)
                 }
             }
     }
