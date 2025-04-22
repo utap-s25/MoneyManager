@@ -283,7 +283,8 @@ class DashboardFragment : Fragment() {
 
 data class BudgetCategory(
     val name: String,
-    val spent: Float,
-    val left: Float,
+    val totalAmount: Float,
+    val spentAmount: Float,
+    val leftAmount: Float,
     val colorRes: Int
 )
