@@ -156,18 +156,20 @@ class DashboardFragment : Fragment() {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, spentWeight)
                 setBackgroundResource(category.colorRes)
 
-                addView(TextView(requireContext()).apply {
-                    text = "$${formatAmount(category.spent)}"
-                    setTextColor(resources.getColor(android.R.color.white, null))
-                    textSize = 16f
-                    setPadding(12, 0, 0, 0)
-                    layoutParams = FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    ).apply {
-                        gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
-                    }
-                })
+                if (spentWeight >= 0.3f) {
+                    addView(TextView(requireContext()).apply {
+                        text = "$${formatAmount(category.spent)}"
+                        setTextColor(resources.getColor(android.R.color.white, null))
+                        textSize = 16f
+                        setPadding(12, 0, 0, 0)
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                        ).apply {
+                            gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
+                        }
+                    })
+                }
             }
 
             val remainingView = FrameLayout(requireContext()).apply {
@@ -187,6 +189,7 @@ class DashboardFragment : Fragment() {
                     }
                 })
             }
+
 
             // Add category name as a label ABOVE the bar
             val label = TextView(requireContext()).apply {
