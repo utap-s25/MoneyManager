@@ -186,7 +186,7 @@ class DashboardFragment : Fragment() {
 
     private fun createBudgetWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
-        val budgetViewModel = ViewModelProvider(this).get(BudgetViewModel::class.java)
+        val budgetViewModel = ViewModelProvider(requireActivity())[BudgetViewModel::class.java]
 
         val onCreateRemainingBudget = budgetViewModel.remainingBudget.value
         contentContainer.text = "$onCreateRemainingBudget"
@@ -210,7 +210,7 @@ class DashboardFragment : Fragment() {
     // Function to handle the "Spending" widget
     private fun createSpendingWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
-        val spendingViewModel = ViewModelProvider(this).get(SpendingViewModel::class.java)
+        val spendingViewModel = ViewModelProvider(requireActivity())[SpendingViewModel::class.java]
         val onCreateTotalSpending = spendingViewModel.totalSpending.value
         contentContainer.text = "$onCreateTotalSpending"
 
@@ -233,7 +233,7 @@ class DashboardFragment : Fragment() {
     // Function to handle the "Balances" widget
     private fun createBalancesWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
-        val balancesViewModel = ViewModelProvider(this).get(BalancesViewModel::class.java)
+        val balancesViewModel = ViewModelProvider(requireActivity())[BalancesViewModel::class.java]
         val onCreateTotalBalance = balancesViewModel.totalBalance.value
         contentContainer.text = "$onCreateTotalBalance"
         balancesViewModel.totalBalance.observe(viewLifecycleOwner, Observer { totalBalance ->
@@ -259,13 +259,12 @@ class DashboardFragment : Fragment() {
     // Function to handle the "Messages" widget
     private fun createMessagesWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
-        val messagesViewModel = ViewModelProvider(this).get(MessagesViewModel::class.java)
+        val messagesViewModel = ViewModelProvider(requireActivity())[MessagesViewModel::class.java]
 
-        val onCreateNewMessages = messagesViewModel.newMessages.value
-        contentContainer.text = "$onCreateNewMessages"
         messagesViewModel.newMessages.observe(viewLifecycleOwner, Observer { newMessages ->
             // Update the TextView with the current remaining budget value
-            contentContainer.text = "$newMessages NEW"
+            Log.d("createMessagesWidget", " THIS SHOULD BE UPDATING: $newMessages")
+            "$newMessages NEW".also { contentContainer.text = it }
         })
 
         widgetView.setOnClickListener {

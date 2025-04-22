@@ -13,14 +13,30 @@ class Transaction(context: Context) {
 
     fun insertTransaction(amount: Double, description: String, date: Long, type: String, guid: String) {
         val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(DatabaseHelper.COLUMN_AMOUNT, amount)
-            put(DatabaseHelper.COLUMN_DESCRIPTION, description)
-            put(DatabaseHelper.COLUMN_DATE, date)
-            put(DatabaseHelper.COLUMN_TYPE, type)
-            put(DatabaseHelper.COLUMN_GUID, guid)
+
+        // First, check if a transaction with the same GUID already exists
+        val cursor = db.query(
+            DatabaseHelper.TABLE_TRANSACTIONS,
+            arrayOf(DatabaseHelper.COLUMN_GUID),
+            "${DatabaseHelper.COLUMN_GUID} = ?",
+            arrayOf(guid),
+            null, null, null
+        )
+
+        val exists = cursor.moveToFirst()
+        cursor.close()
+
+        if (!exists) {
+            val values = ContentValues().apply {
+                put(DatabaseHelper.COLUMN_AMOUNT, amount)
+                put(DatabaseHelper.COLUMN_DESCRIPTION, description)
+                put(DatabaseHelper.COLUMN_DATE, date)
+                put(DatabaseHelper.COLUMN_TYPE, type)
+                put(DatabaseHelper.COLUMN_GUID, guid)
+            }
+            db.insert(DatabaseHelper.TABLE_TRANSACTIONS, null, values)
         }
-        db.insert(DatabaseHelper.TABLE_TRANSACTIONS, null, values)
+
         db.close()
     }
 

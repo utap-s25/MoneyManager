@@ -1,5 +1,6 @@
 package com.example.moneymanager.ui.messages
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,12 +59,12 @@ class MessagesViewModel : ViewModel() {
                     for (doc in snapshot.documents) {
                         doc.toObject(Message::class.java)?.let { msg ->
                             newMessages.add(msg)
+                            Log.d("MessageListener", "currentUserId:  ${currentUserId}, From: ${msg.senderId}, To: ${msg.receiverId}, Message: ${msg.message}, isRead: ${msg.isRead}")
                             if (!msg.isRead && msg.receiverId == currentUserId) {
                                 unreadCount++
                             }
                         }
                     }
-
                     _messages.postValue(newMessages)
                     _newMessages.postValue(unreadCount)
                 }

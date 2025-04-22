@@ -84,6 +84,26 @@ class MessagesFragment : Fragment() {
             }
         }
 
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        markMessagesAsRead()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        markMessagesAsRead()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        markMessagesAsRead()
+    }
+
+    override fun onPause() {
+        super.onPause()
         markMessagesAsRead()
     }
 
@@ -104,6 +124,7 @@ class MessagesFragment : Fragment() {
     }
 
     private fun markMessagesAsRead() {
+        Log.d("MessageListener", "GOING TO MARK ALL MESSAGES AS UNREAD")
         FirebaseFirestore.getInstance()
             .collection("conversations")
             .document(conversationId)
