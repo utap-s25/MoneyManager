@@ -63,7 +63,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun addDashboardWidgets() {
-        val widgets = listOf("Overview", "Budget", "Spending", "Balances", "Messages")
+        val widgets = listOf("Overview", "Spending", "Balances", "Messages")
         val container = binding.widgetContainer
 
         if (container == null) {
@@ -84,7 +84,7 @@ class DashboardFragment : Fragment() {
                 titleTextView?.gravity = Gravity.CENTER
                 createOverViewWidget(widgetView)
             } else if (widgetName == "Budget") {
-                createBudgetWidget(widgetView)
+                //createBudgetWidget(widgetView)
             } else if (widgetName == "Spending") {
                 createSpendingWidget(widgetView)
             } else if (widgetName == "Balances") {
@@ -175,6 +175,12 @@ class DashboardFragment : Fragment() {
                 text = category.name
                 textSize = 16f
                 setPadding(1, 0, 0, 1)
+            }
+
+            widgetView.setOnClickListener {
+                // Navigate to the Budget screen
+                findNavController().popBackStack()
+                findNavController().navigate(R.id.navigation_budget)
             }
 
             chartContainer.addView(label)

@@ -18,6 +18,13 @@
         tools:layout="@layout/fragment_budget" />
 
     <fragment
+        android:id="@+id/navigation_create_budget"
+        android:name="com.example.moneymanager.ui.budget.CreateBudgetFragment"
+        android:label="Create Budget"
+        tools:layout="@layout/fragment_create_budget" />
+
+
+    <fragment
         android:id="@+id/navigation_spending"
         android:name="com.example.moneymanager.ui.spending.SpendingFragment"
         android:label="@string/title_spending"

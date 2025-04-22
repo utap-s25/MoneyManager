@@ -1,9 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Create New Budget Button -->
+    <Button
+        android:id="@+id/createNewBudgetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Budget"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp" />
+
+
+    <!-- RecyclerView to show the budgets -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/budgetsRecyclerView"
         android:layout_width="0dp"
@@ -16,8 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createNewBudgetButton"
         app:layout_constraintVertical_bias="0.0" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

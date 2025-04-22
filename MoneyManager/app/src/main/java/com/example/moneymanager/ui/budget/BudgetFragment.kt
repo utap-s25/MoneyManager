@@ -1,6 +1,7 @@
 package com.example.moneymanager.ui.budget
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moneymanager.R
+import com.example.moneymanager.api.BudgetsApi
 import com.example.moneymanager.databinding.FragmentBudgetBinding
 import com.example.moneymanager.repositories.Budget // Assuming this is your local budgets repository
+import kotlinx.coroutines.launch
 
 class BudgetFragment : Fragment() {
 
@@ -40,6 +46,12 @@ class BudgetFragment : Fragment() {
         val adapter = BudgetsAdapter(budgets)
         binding.budgetsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.budgetsRecyclerView.adapter = adapter
+
+        binding.createNewBudgetButton.setOnClickListener {
+            // --- New behavior: Navigate to Create Budget Form ---
+            findNavController().navigate(R.id.navigation_create_budget)
+        }
+
 
         return root
     }

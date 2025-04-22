@@ -62,7 +62,7 @@ class Budget(context: Context) {
                 val amount = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_AMOUNT))
                 val percent = getDouble(getColumnIndexOrThrow(DatabaseHelper.COLUMN_PERCENT))
                 val categoryId = getString(getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID))
-                budgets.add(LocalBudget(id, guid, name, amount, percent, categoryId))
+                budgets.add(LocalBudget(id, guid, name, percent, amount, categoryId))
             }
             close()
         }

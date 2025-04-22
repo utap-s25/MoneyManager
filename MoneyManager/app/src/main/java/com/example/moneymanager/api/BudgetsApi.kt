@@ -1,12 +1,16 @@
 package com.example.moneymanager.api
 
+import com.example.moneymanager.api.TransactionApi.CreateMemberBody
+import com.example.moneymanager.api.TransactionApi.MemberResponse
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -19,6 +23,15 @@ interface BudgetsApi {
         @Query("page") page: Int? = null,
         @Query("records_per_page") recordsPerPage: Int? = null
     ): BudgetsResponse
+
+    data class CreateBudgetWrapper(
+        val budget: CreateBudgetBody
+    )
+    @POST("users/{user_guid}/budgets")
+    suspend fun createNewBudget(
+        @Path("user_guid") userGuid: String,
+        @Body body: CreateBudgetWrapper
+    ): BudgetResponse
 
     // Data class for handling budget response
     data class Budget(
@@ -44,6 +57,15 @@ interface BudgetsApi {
         val per_page: Int,
         val total_entries: Int,
         val total_pages: Int
+    )
+
+    data class CreateBudgetBody(
+        val amount: Double,
+        val category_guid: String
+    )
+
+    data class BudgetResponse(
+        val budget: Budget
     )
 
     data class BudgetsResponse(

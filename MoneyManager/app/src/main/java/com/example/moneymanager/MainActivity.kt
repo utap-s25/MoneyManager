@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-                val budget = budgetHelper.setupAndFetchBudgets(budgetApi, "USR-57750651-ce65-4480-9999-fc57ed8b805a")
+                val budget = budgetHelper.setupAndFetchBudgets(budgetApi, "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c")
                 Log.d("MainActivity", "Fetched ${budget.size} budgets")
 
                 budget.forEach { budget ->
@@ -139,12 +139,14 @@ class MainActivity : AppCompatActivity() {
                     budgetRepo.insertBudget(
                         guid = budget.guid,
                         name = budget.name,
-                        amount = budget.amount,
                         percent = budget.percentSpent,
+                        amount = budget.amount,
                         categoryId = budget.categoryId
                     )
                 }
 
+                val allBudgets = budgetRepo.getAllBudgets()
+                Log.d("mainActivity", "Budgets in DB:\n" + allBudgets.joinToString("\n") { it.toString() })
 
 
                 Log.d("MainActivity", "Inserted accounts into local DB")
