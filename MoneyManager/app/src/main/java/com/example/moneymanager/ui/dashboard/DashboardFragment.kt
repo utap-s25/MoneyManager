@@ -26,6 +26,7 @@ import java.util.*
 import java.text.DecimalFormat
 import com.example.moneymanager.repositories.Transaction as TransactionRepo
 import com.example.moneymanager.repositories.Accounts as AccountRepo
+import com.example.moneymanager.repositories.Budget as BudgetRepo
 
 class DashboardFragment : Fragment() {
 
@@ -101,6 +102,14 @@ class DashboardFragment : Fragment() {
         _binding = null
     }
 
+    fun formatAmount(amount: Float): String {
+        return when {
+            amount >= 1_000_000 -> String.format("%.1fM", amount / 1_000_000)
+            amount >= 1_000 -> String.format("%.1fK", amount / 1_000)
+            else -> amount.toString()
+        }
+    }
+
     private fun createOverViewWidget(widgetView: View) {
         val chartContainer = widgetView.findViewById<LinearLayout>(R.id.widget_chart_container)
         chartContainer.visibility = View.VISIBLE
@@ -111,13 +120,22 @@ class DashboardFragment : Fragment() {
         val currentMonth = monthFormat.format(Date())
         titleContainer.text = "$currentMonth Overview"
 
-        val categories = listOf(
-            BudgetCategory("Groceries", 300f, 200f, R.color.blue),
-            BudgetCategory("Entertainment", 150f, 350f, R.color.purple),
-            BudgetCategory("Transportation", 250f, 150f, R.color.orange),
-            BudgetCategory("Housing", 800f, 200f, R.color.green),
-            BudgetCategory("Miscellaneous", 500f, 100f, R.color.yellow)
+        val budgetRepo = BudgetRepo(requireContext())
+        val localBudgets = budgetRepo.getAllBudgets()
+
+        val colors = listOf(
+            R.color.blue,
+            R.color.purple,
+            R.color.orange,
+            R.color.gold
         )
+
+        val categories = localBudgets.mapIndexed { index, it ->
+            val spent = (it.amount * it.percentSpent / 100).toFloat()
+            val left = (it.amount - spent).toFloat()
+            val colorRes = colors[index % colors.size]
+            BudgetCategory(it.name, spent, left, colorRes)
+        }
 
         categories.forEach { category ->
             val total = category.spent + category.left
@@ -139,7 +157,7 @@ class DashboardFragment : Fragment() {
                 setBackgroundResource(category.colorRes)
 
                 addView(TextView(requireContext()).apply {
-                    text = "$${category.spent.toInt()}"
+                    text = "$${formatAmount(category.spent)}"
                     setTextColor(resources.getColor(android.R.color.white, null))
                     textSize = 16f
                     setPadding(12, 0, 0, 0)
@@ -157,7 +175,7 @@ class DashboardFragment : Fragment() {
                 setBackgroundResource(R.color.gray)
 
                 addView(TextView(requireContext()).apply {
-                    text = "$${category.left.toInt()}"
+                    text = "$${formatAmount(category.left)}"
                     setTextColor(resources.getColor(android.R.color.black, null))
                     textSize = 16f
                     setPadding(0, 0, 12, 0)
@@ -279,12 +297,53 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(R.id.navigation_messages)
         }
     }
+
+//    private fun createMockData() {
+//        val budgetViewModel = ViewModelProvider(this).get(BudgetViewModel::class.java)
+//        // TEST DATA REMOVE
+//        budgetViewModel.setTotalBudget(10000f)
+//        // TEST DATA REMOVE
+//        budgetViewModel.updateSpending(1800f)
+//
+//        val spendingViewModel = ViewModelProvider(this).get(SpendingViewModel::class.java)
+//
+//// List of categories
+//        val categories = listOf(
+//            SpendingCategory("Groceries", 300f),
+//            SpendingCategory("Entertainment", 150f),
+//            SpendingCategory("Transportation", 250f),
+//            SpendingCategory("Housing", 800f),
+//            SpendingCategory("Dining Out", 120f),
+//            SpendingCategory("Miscellaneous", 50f)
+//        )
+//
+//// Update the spending categories in the ViewModel
+//        spendingViewModel.updateSpendingCategories(categories)
+//
+//// Observe the LiveData
+//        spendingViewModel.totalSpending.observe(viewLifecycleOwner) { total ->
+//            println("Total Spending: $total")
+//        }
+//
+//        spendingViewModel.topSpendingCategories.observe(viewLifecycleOwner) { topCategories ->
+//            println("Top 4 Spending Categories: $topCategories")
+//        }
+//
+//        spendingViewModel.miscellaneousSpending.observe(viewLifecycleOwner) { miscellaneous ->
+//            println("Miscellaneous Spending: $miscellaneous")
+//        }
+//
+//        val balancesViewModel = ViewModelProvider(this).get(BalancesViewModel::class.java)
+//        balancesViewModel.setTotalBalance(10000000f)
+//
+//        val messagesViewModel = ViewModelProvider(this).get(MessagesViewModel::class.java)
+//        messagesViewModel.setNewMessages(3)
+//    }
 }
 
 data class BudgetCategory(
     val name: String,
-    val totalAmount: Float,
-    val spentAmount: Float,
-    val leftAmount: Float,
+    val spent: Float,
+    val left: Float,
     val colorRes: Int
 )
