@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         var receiverId = "SWV6Vp1NeAVoAgKBjC1cM2iD9E13"
-        if (currentUser!!.uid == receiverId) {
+        if (currentUser.uid == receiverId) {
             receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
         }
 
@@ -134,14 +134,14 @@ class MainActivity : AppCompatActivity() {
                 val budget = budgetHelper.setupAndFetchBudgets(budgetApi, "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c")
                 Log.d("MainActivity", "Fetched ${budget.size} budgets")
 
-                budget.forEach { budget ->
-                    Log.d("mainActivity", "${budget.categoryId}")
+                budget.forEach { localBudget ->
+                    Log.d("mainActivity", "${localBudget.categoryId}")
                     budgetRepo.insertBudget(
-                        guid = budget.guid,
-                        name = budget.name,
-                        percent = budget.percentSpent,
-                        amount = budget.amount,
-                        categoryId = budget.categoryId
+                        guid = localBudget.guid,
+                        name = localBudget.name,
+                        amount = localBudget.amount,
+                        percent = localBudget.percentSpent,
+                        categoryId = localBudget.categoryId
                     )
                 }
 

@@ -5,5 +5,7 @@ data class Message(
     val receiverId: String = "",
     val message: String = "",
     val timestamp: Long = 0L,
-    val isRead: Boolean = false
+    @get:com.google.firebase.firestore.PropertyName("isRead")
+    @set:com.google.firebase.firestore.PropertyName("isRead")
+    var isRead: Boolean = false
 )
