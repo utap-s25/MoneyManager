@@ -1,14 +1,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="start"
-    android:padding="8dp"
+    android:gravity="end"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
     android:orientation="horizontal">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="9"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:padding="4dp"
+        android:layout_margin="4dp"
+        android:orientation="vertical"
+        android:background="@drawable/message_received_background">
+
+    <TextView
+        android:id="@+id/textReceivedTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/even_darker_gray"
+        android:layout_gravity="start"
+        android:paddingBottom="2dp"/>
 
     <TextView
         android:id="@+id/textReceivedMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:padding="8dp" />
+        android:paddingStart="6dp"
+        android:textColor="@color/even_darker_gray" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/emptyTextView"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"/>
 </LinearLayout>

@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moneymanager.databinding.ItemMessageReceivedBinding
 import com.example.moneymanager.databinding.ItemMessageSentBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MessageAdapter(private val messages: List<Message>, private val currentUserId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -30,11 +33,19 @@ class MessageAdapter(private val messages: List<Message>, private val currentUse
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
+        val timestamp = formatTimestamp(message.timestamp)
         if (holder is SentMessageViewHolder) {
+            holder.binding.textSentTimestamp.text = timestamp
             holder.binding.textSentMessage.text = message.message
         } else if (holder is ReceivedMessageViewHolder) {
+            holder.binding.textReceivedTimestamp.text = timestamp
             holder.binding.textReceivedMessage.text = message.message
         }
+    }
+
+    private fun formatTimestamp(timestamp: Long): String {
+        val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        return sdf.format(Date(timestamp))
     }
 
     class SentMessageViewHolder(val binding: ItemMessageSentBinding) : RecyclerView.ViewHolder(binding.root)

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class AccountViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is the Account Fragment"
+        value = "This is where more settings would go if we added more user features or account settings"
     }
     val text: LiveData<String> = _text
 }

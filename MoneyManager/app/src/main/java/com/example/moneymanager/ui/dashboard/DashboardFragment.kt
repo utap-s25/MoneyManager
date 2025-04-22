@@ -279,48 +279,6 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(R.id.navigation_messages)
         }
     }
-
-//    private fun createMockData() {
-//        val budgetViewModel = ViewModelProvider(this).get(BudgetViewModel::class.java)
-//        // TEST DATA REMOVE
-//        budgetViewModel.setTotalBudget(10000f)
-//        // TEST DATA REMOVE
-//        budgetViewModel.updateSpending(1800f)
-//
-//        val spendingViewModel = ViewModelProvider(this).get(SpendingViewModel::class.java)
-//
-//// List of categories
-//        val categories = listOf(
-//            SpendingCategory("Groceries", 300f),
-//            SpendingCategory("Entertainment", 150f),
-//            SpendingCategory("Transportation", 250f),
-//            SpendingCategory("Housing", 800f),
-//            SpendingCategory("Dining Out", 120f),
-//            SpendingCategory("Miscellaneous", 50f)
-//        )
-//
-//// Update the spending categories in the ViewModel
-//        spendingViewModel.updateSpendingCategories(categories)
-//
-//// Observe the LiveData
-//        spendingViewModel.totalSpending.observe(viewLifecycleOwner) { total ->
-//            println("Total Spending: $total")
-//        }
-//
-//        spendingViewModel.topSpendingCategories.observe(viewLifecycleOwner) { topCategories ->
-//            println("Top 4 Spending Categories: $topCategories")
-//        }
-//
-//        spendingViewModel.miscellaneousSpending.observe(viewLifecycleOwner) { miscellaneous ->
-//            println("Miscellaneous Spending: $miscellaneous")
-//        }
-//
-//        val balancesViewModel = ViewModelProvider(this).get(BalancesViewModel::class.java)
-//        balancesViewModel.setTotalBalance(10000000f)
-//
-//        val messagesViewModel = ViewModelProvider(this).get(MessagesViewModel::class.java)
-//        messagesViewModel.setNewMessages(3)
-//    }
 }
 
 data class BudgetCategory(

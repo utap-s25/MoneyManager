@@ -1,5 +1,6 @@
 package com.example.moneymanager.ui.balances
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,17 @@ class AccountBalanceAdapter(private val accountList: List<LocalAccount>) :
         private val nameTextView: TextView = itemView.findViewById(R.id.accountNameTextView)
 
 
+        @SuppressLint("DefaultLocale")
         fun bind(account: LocalAccount) {
-            balanceTextView.text = "$${account.balance}"
+            val balance = account.balance
+            if (balance < 0) {
+                balanceTextView.setTextColor(itemView.context.getColor(android.R.color.holo_red_dark))
+            } else {
+                balanceTextView.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
+            }
+
+            val formattedBalance = "$${String.format("%.2f", kotlin.math.abs(balance))}"
+            balanceTextView.text = formattedBalance
             typeTextView.text = account.type
             nameTextView.text = account.name
         }

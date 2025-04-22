@@ -27,6 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Widget Title"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
