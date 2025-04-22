@@ -28,8 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            android:textColor="@android:color/black"
-            android:paddingEnd="4dp"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="4dp"
             android:layout_gravity="end"
             android:paddingBottom="2dp"/>
 
@@ -37,8 +37,7 @@
             android:id="@+id/textSentMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:padding="2dp" />
     </LinearLayout>
 </LinearLayout>
