@@ -18,6 +18,7 @@ class BudgetFragment : Fragment() {
 
     private var _binding: FragmentBudgetBinding? = null
     private val binding get() = _binding!!
+    private lateinit var budgetsAdapter: BudgetsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +27,6 @@ class BudgetFragment : Fragment() {
     ): View {
         _binding = FragmentBudgetBinding.inflate(inflater, container, false)
 
-        // Apply bottom padding for system bars
         ViewCompat.setOnApplyWindowInsetsListener(binding.budgetsRecyclerView) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(bottom = systemBars.bottom + 16)
@@ -36,18 +36,31 @@ class BudgetFragment : Fragment() {
         val root: View = binding.root
 
         val budgetsRepo = Budget(requireContext())
-        val budgets = budgetsRepo.getAllBudgets() // This should return List<LocalBudget>
+        val budgets = budgetsRepo.getAllBudgets().toMutableList() // 🔥 Make it mutable
 
-        // Set up RecyclerView
-        val adapter = BudgetsAdapter(budgets)
-        binding.budgetsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.budgetsRecyclerView.adapter = adapter
+        // 🔥 Create adapter with deletion callback
+        budgetsAdapter = BudgetsAdapter(budgets) { guid, position ->
+            lifecycleScope.launch {
+                try {
+                    BudgetsApi.create().deleteBudget("user-guid", guid)
+                } catch (e: Exception) {
+                    Log.e("BudgetFragment", "Failed to delete budget $guid: ${e.message}")
+                } finally {
+                    budgetsRepo.deleteBudgetByGuid(guid) // 🔥 Add this to your Budget repo
 
-        binding.createNewBudgetButton.setOnClickListener {
-            // --- New behavior: Navigate to Create Budget Form ---
-            findNavController().navigate(R.id.navigation_create_budget)
+                    budgets.removeAt(position)
+                    budgetsAdapter.notifyItemRemoved(position)
+                }
+            }
         }
 
+
+        binding.budgetsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.budgetsRecyclerView.adapter = budgetsAdapter
+
+        binding.createNewBudgetButton.setOnClickListener {
+            findNavController().navigate(R.id.navigation_create_budget)
+        }
 
         return root
     }
@@ -57,3 +70,4 @@ class BudgetFragment : Fragment() {
         _binding = null
     }
 }
+

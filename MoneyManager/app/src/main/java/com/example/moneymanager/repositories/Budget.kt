@@ -69,4 +69,9 @@ class Budget(context: Context) {
         db.close()
         return budgets
     }
+
+    fun deleteBudgetByGuid(guid: String) {
+        val db = dbHelper.readableDatabase
+        db.delete("budgets", "guid = ?", arrayOf(guid))
+    }
 }
