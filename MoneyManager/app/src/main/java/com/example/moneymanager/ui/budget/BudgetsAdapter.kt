@@ -13,7 +13,6 @@ import com.example.moneymanager.database.LocalBudget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class BudgetsAdapter(
     private val budgets: MutableList<LocalBudget>,
@@ -32,11 +31,6 @@ class BudgetsAdapter(
 
     override fun getItemCount(): Int = budgets.size
 
-    fun deleteBudgetAtPosition(position: Int) {
-        budgets.removeAt(position)  // Remove the item from the list
-        notifyItemRemoved(position)  // Notify the adapter that the item has been removed
-    }
-
     inner class BudgetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.budget_name)
         private val amountTextView: TextView = itemView.findViewById(R.id.budget_amount)
@@ -49,32 +43,25 @@ class BudgetsAdapter(
             nameTextView.text = budget.name
             amountTextView.text = "$${budget.amount}"
 
-            // Use ViewTreeObserver to ensure that the layout is measured before calculating the width
-
             closeIcon.setOnClickListener {
                 val currentPosition = adapterPosition
                 if (currentPosition != RecyclerView.NO_POSITION) {
                     // Immediately remove the item from the adapter and update UI
                     onDelete(budget.guid, currentPosition)
-
                     // Then attempt the API call, but don't block the UI on it
                     val budgetsApi = BudgetsApi.create()
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            budgetsApi.deleteBudget("USR-9cd24e37-15f6-4938-958a-7f0798e63c3c", budget.guid)
+                            budgetsApi.deleteBudget("USR-5b15b200-28b6-41c1-91fd-1b362829025a", budget.guid)
                             Log.d("BudgetsAdapter", "Successfully deleted budget ${budget.guid}")
                         } catch (e: Exception) {
                             Log.e("BudgetsAdapter", "Failed to delete budget ${budget.guid}", e)
-                            // Optionally show a toast/snackbar on the main thread
-                            withContext(Dispatchers.Main) {
-                                // e.g., Toast.makeText(context, "Delete failed", Toast.LENGTH_SHORT).show()
-                            }
                         }
                     }
                 }
             }
             itemView.viewTreeObserver.addOnPreDrawListener {
-                val totalWidth = itemView.width // This will now be correct after the layout is measured
+                val totalWidth = itemView.width
 
                 val percentSpent = budget.percentSpent
                 val spentWidth = (totalWidth * (percentSpent / 100)).toInt()
@@ -96,7 +83,6 @@ class BudgetsAdapter(
                 // Set the text of the spent amount
                 spentAmountText.text = "Spent: $${spentAmount}"
 
-                // Optionally change the color of the spent view (green/red depending on the remaining amount)
                 if (spentAmount == budget.amount) {
                     spentView.setBackgroundResource(android.R.color.holo_red_dark) // Red if all is spent
                     amountTextView.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark))
@@ -113,25 +99,6 @@ class BudgetsAdapter(
 
         }
 
-
-
-//        fun deleteBudgetItem(budgetGuid: String, position: Int) {
-//            val userGuid = "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c" // Replace this with actual user GUID
-//
-//            val budgetsApi = BudgetsApi.create()
-//            CoroutineScope(Dispatchers.IO).launch {
-//                try {
-//                    budgetsApi.deleteBudget(userGuid, budgetGuid)
-//                    withContext(Dispatchers.Main) {
-//                        onDeleteConfirmed(position) // 👈 Trigger deletion in Fragment
-//                    }
-//                } catch (e: Exception) {
-//                    withContext(Dispatchers.Main) {
-//                        // Show error message if needed
-//                    }
-//                }
-//            }
-//        }
 
 
     }

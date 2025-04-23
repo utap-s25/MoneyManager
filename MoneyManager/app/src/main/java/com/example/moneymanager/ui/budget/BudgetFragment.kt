@@ -40,9 +40,8 @@ class BudgetFragment : Fragment() {
         val root: View = binding.root
 
         val budgetsRepo = Budget(requireContext())
-        val budgets = budgetsRepo.getAllBudgets().toMutableList() // 🔥 Make it mutable
+        val budgets = budgetsRepo.getAllBudgets().toMutableList()
 
-        // 🔥 Create adapter with deletion callback
         budgetsAdapter = BudgetsAdapter(budgets) { guid, position ->
             lifecycleScope.launch {
                 try {
@@ -50,7 +49,7 @@ class BudgetFragment : Fragment() {
                 } catch (e: Exception) {
                     Log.e("BudgetFragment", "Failed to delete budget $guid: ${e.message}")
                 } finally {
-                    budgetsRepo.deleteBudgetByGuid(guid) // 🔥 Add this to your Budget repo
+                    budgetsRepo.deleteBudgetByGuid(guid)
 
                     budgets.removeAt(position)
                     budgetsAdapter.notifyItemRemoved(position)

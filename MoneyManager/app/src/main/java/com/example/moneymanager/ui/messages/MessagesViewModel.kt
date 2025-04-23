@@ -25,10 +25,6 @@ class MessagesViewModel : ViewModel() {
     }
     val newMessages: LiveData<Int> = _newMessages
 
-    // Method to update the messages list
-    fun setMessages(messages: List<Message>) {
-        _messages.value = messages
-    }
 
     // Method to update new message count (if you need to track this)
     fun setNewMessages(newMessages: Int) {
