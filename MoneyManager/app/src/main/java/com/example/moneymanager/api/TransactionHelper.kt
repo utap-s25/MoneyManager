@@ -13,7 +13,7 @@ class TransactionHelper {
             try {
                 Log.d("TransactionHelper", "Using user GUID: $userGuid")
                 // Hardcoded user and member GUIDs (already created)
-                val memberGuid = "MBR-e7cce61b-4f7f-4651-add3-030bd3f25858" // replace with your real member GUID
+                val memberGuid = "MBR-2110f075-9767-4ae8-b295-9834e79dd11b" // replace with your real member GUID
 
                 // Optional: Trigger aggregation if needed
                 api.aggregateMember(userGuid, memberGuid)
