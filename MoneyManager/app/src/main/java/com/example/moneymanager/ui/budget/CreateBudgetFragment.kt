@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.moneymanager.Constants
 import com.example.moneymanager.api.BudgetsApi
 import com.example.moneymanager.databinding.FragmentCreateBudgetBinding
 import com.example.moneymanager.repositories.Budget
@@ -67,8 +69,11 @@ class CreateBudgetFragment : Fragment() {
                             }
 
                             // Proceed to create the budget using API
+                            val prefs = requireContext().getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
+                            val mxUserGuid = prefs.getString(Constants.MX_USER_GUID_KEY, null) ?:
+                                throw IllegalStateException("MX user GUID is missing. Cannot proceed.")
                             val response = api.createNewBudget(
-                                userGuid = "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c", // Replace with dynamic user GUID
+                                userGuid = mxUserGuid, // Replace with dynamic user GUID
                                 body = BudgetsApi.CreateBudgetWrapper(
                                     budget = BudgetsApi.CreateBudgetBody(
                                         amount = amount,

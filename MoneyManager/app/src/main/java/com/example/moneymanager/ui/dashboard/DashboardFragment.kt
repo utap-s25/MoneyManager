@@ -2,31 +2,30 @@ package com.example.moneymanager.ui.dashboard
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.LinearLayout
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.moneymanager.R
 import com.example.moneymanager.databinding.FragmentDashboardBinding
-import androidx.navigation.fragment.findNavController
-import androidx.lifecycle.Observer
-import androidx.lifecycle.LiveData
 import com.example.moneymanager.ui.balances.BalancesViewModel
 import com.example.moneymanager.ui.budget.BudgetViewModel
 import com.example.moneymanager.ui.messages.MessagesViewModel
 import com.example.moneymanager.ui.spending.SpendingViewModel
-import com.example.moneymanager.ui.spending.SpendingCategory
-import java.text.SimpleDateFormat
-import java.util.*
 import java.text.DecimalFormat
-import com.example.moneymanager.repositories.Transaction as TransactionRepo
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.example.moneymanager.repositories.Accounts as AccountRepo
 import com.example.moneymanager.repositories.Budget as BudgetRepo
+import com.example.moneymanager.repositories.Transaction as TransactionRepo
 
 class DashboardFragment : Fragment() {
 

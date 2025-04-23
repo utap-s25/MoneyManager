@@ -1,5 +1,6 @@
 package com.example.moneymanager.api
 
+import com.example.moneymanager.database.LocalAccount
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -8,7 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
-import com.example.moneymanager.database.LocalAccount // Make sure this import is correct
 
 interface AccountApi {
 

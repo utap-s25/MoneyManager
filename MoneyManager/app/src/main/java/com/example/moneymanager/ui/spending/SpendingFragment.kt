@@ -13,9 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moneymanager.R
 import com.example.moneymanager.databinding.FragmentSpendingBinding
-import com.example.moneymanager.repositories.Transaction as TransactionRepo
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import com.example.moneymanager.repositories.Transaction as TransactionRepo
 
 class SpendingFragment : Fragment() {
 

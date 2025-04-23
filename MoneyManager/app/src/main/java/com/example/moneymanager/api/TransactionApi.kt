@@ -1,5 +1,6 @@
 package com.example.moneymanager.api
 
+import com.example.moneymanager.database.LocalTransaction
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -11,7 +12,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import com.example.moneymanager.database.LocalTransaction as LocalTransaction
 
 interface TransactionApi {
 

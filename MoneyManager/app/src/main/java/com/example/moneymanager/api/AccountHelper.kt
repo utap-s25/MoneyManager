@@ -1,9 +1,7 @@
 package com.example.moneymanager.api
 
-import android.util.Log
 import com.example.moneymanager.database.LocalAccount
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class AccountHelper {

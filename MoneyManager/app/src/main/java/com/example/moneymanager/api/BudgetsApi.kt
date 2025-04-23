@@ -1,7 +1,5 @@
 package com.example.moneymanager.api
 
-import com.example.moneymanager.api.TransactionApi.CreateMemberBody
-import com.example.moneymanager.api.TransactionApi.MemberResponse
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient

@@ -5,11 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moneymanager.R
 import com.example.moneymanager.databinding.FragmentMessagesBinding
 import com.example.moneymanager.message.Message
 import com.example.moneymanager.message.MessageAdapter
@@ -25,7 +25,7 @@ class MessagesFragment : Fragment() {
     private lateinit var adapter: MessageAdapter
     private val messages = mutableListOf<Message>()
 
-    private var receiverId: String = "SWV6Vp1NeAVoAgKBjC1cM2iD9E13"
+    private lateinit var receiverId: String
     private var currentUserId: String? = null
     private lateinit var conversationId: String
 
@@ -45,10 +45,12 @@ class MessagesFragment : Fragment() {
 
         // Get the current user ID
         // TODO PROBABLY NEED TO REMOVE THIS TOO
+        receiverId = context?.getString(R.string.financial_advisor_id) ?: ""
         currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserId == receiverId) {
             receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
         }
+        Log.d("MessagesFragment", "currentUserId: $currentUserId, receiverId: $receiverId")
         conversationId = if (currentUserId!! < receiverId) {
             "$currentUserId-$receiverId"
         } else {
@@ -71,16 +73,21 @@ class MessagesFragment : Fragment() {
             binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
         })
 
-        binding.messageEditText.addTextChangedListener {
-            Log.d("Message", "Current input text: ${it.toString()}")
-        }
-
         // Send button click listener
         binding.sendButton.setOnClickListener {
             val text = binding.messageEditText.text.toString()
             if (text.isNotBlank()) {
                 sendMessage(text)
                 binding.messageEditText.setText("") // Clear the input field
+                FirebaseFirestore.getInstance()
+                    .collection("conversations")
+                    .document(conversationId!!)
+                    .collection("messages")
+                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                    .get() // Add this call to force Firestore to refresh the listener
+                    .addOnSuccessListener { snapshot ->
+                        Log.d("Firestore", "Snapshot refreshed after sending message")
+                    }
             }
         }
 

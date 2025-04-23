@@ -8,11 +8,11 @@ import kotlinx.coroutines.withContext
 
 class TransactionHelper {
 
-    suspend fun setupAndFetchTestTransactions(api: TransactionApi): List<LocalTransaction> {
+    suspend fun setupAndFetchTestTransactions(api: TransactionApi, userGuid: String): List<LocalTransaction> {
         return withContext(Dispatchers.IO) {
             try {
+                Log.d("TransactionHelper", "Using user GUID: $userGuid")
                 // Hardcoded user and member GUIDs (already created)
-                val userGuid = "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c"
                 val memberGuid = "MBR-e7cce61b-4f7f-4651-add3-030bd3f25858" // replace with your real member GUID
 
                 // Optional: Trigger aggregation if needed

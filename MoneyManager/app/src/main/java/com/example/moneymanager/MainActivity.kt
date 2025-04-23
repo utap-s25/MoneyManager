@@ -1,33 +1,34 @@
 package com.example.moneymanager
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.moneymanager.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
-import android.content.Intent
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import com.example.moneymanager.api.TransactionApi
-import com.example.moneymanager.api.TransactionHelper
-import android.util.Log
 import com.example.moneymanager.api.AccountApi
-import com.example.moneymanager.repositories.Transaction
-import com.example.moneymanager.repositories.Accounts
 import com.example.moneymanager.api.AccountHelper
 import com.example.moneymanager.api.BudgetsApi
 import com.example.moneymanager.api.BudgetsHelper
+import com.example.moneymanager.api.TransactionApi
+import com.example.moneymanager.api.TransactionHelper
+import com.example.moneymanager.databinding.ActivityMainBinding
+import com.example.moneymanager.repositories.Accounts
 import com.example.moneymanager.repositories.Budget
+import com.example.moneymanager.repositories.Transaction
+import com.example.moneymanager.ui.messages.MessagesViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-import android.view.Menu
-import android.view.MenuItem
-import com.example.moneymanager.ui.messages.MessagesViewModel
-import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,10 +44,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        var receiverId = "SWV6Vp1NeAVoAgKBjC1cM2iD9E13"
+        var receiverId = this.getString(R.string.financial_advisor_id) ?: ""
         if (currentUser.uid == receiverId) {
             receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
         }
+        Log.d("MainActivity", "currentUser.uid: ${currentUser.uid}, receiverId: $receiverId")
 
         val messagesViewModel = ViewModelProvider(this).get(MessagesViewModel::class.java)
         messagesViewModel.startListeningForMessages(currentUser.uid, receiverId)
@@ -78,7 +80,27 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 // Fetch transactions
-                val transactions = transactionHelper.setupAndFetchTestTransactions(api)
+
+                val prefs = this@MainActivity.getSharedPreferences(Constants.SHARED_PREFS_NAME, MODE_PRIVATE)
+                val guid = prefs.getString(Constants.MX_USER_GUID_KEY, null)
+
+                if (guid == null) {
+                    Toast.makeText(this@MainActivity, "Something went wrong. Please log in again.", Toast.LENGTH_LONG).show()
+
+                    FirebaseAuth.getInstance().signOut()
+
+                    // Optional: Clear any cached local data too
+                    prefs.edit().clear().apply()
+
+                    // Navigate back to login screen
+                    val intent = Intent(this@MainActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // clear back stack
+                    startActivity(intent)
+
+                    return@launch
+                }
+
+                val transactions = transactionHelper.setupAndFetchTestTransactions(api, guid)
                 Log.d("MainActivity", "Fetched ${transactions.size} test transactions")
 
                 // Adjusted SimpleDateFormat for the format "yyyy-MM-dd"
@@ -116,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "Inserted transactions into local DB")
 
                 // Fetch accounts
-                val accounts = accountHelper.setupAndFetchAccounts(accountApi, "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c") // Fetch accounts from the API
+                val accounts = accountHelper.setupAndFetchAccounts(accountApi, guid) // Fetch accounts from the API
                 Log.d("MainActivity", "Fetched ${accounts.size} accounts")
 
                 // Insert each account into the local database
@@ -131,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-                val budget = budgetHelper.setupAndFetchBudgets(budgetApi, "USR-9cd24e37-15f6-4938-958a-7f0798e63c3c")
+                val budget = budgetHelper.setupAndFetchBudgets(budgetApi, guid)
                 Log.d("MainActivity", "Fetched ${budget.size} budgets")
 
                 budget.forEach { localBudget ->
