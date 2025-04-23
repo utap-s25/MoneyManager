@@ -44,9 +44,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        // TODO IMPLEMENT UI FOR MONEY MANAGER THAT PULLS ALL USERIDS
+        // THIS IS FUNCTIONALITY THAT IS EXCLUSIVE FOR THE MONEY MANAGER
+        // WE DIDN'T CREATE A SEPERATE UI FOR THE MONEY MANAGER TO KEEP TRACK OF THE MESSAGE COMPONENTS
+        // SO WE HARDCODED THIS TO POINT AT OUR TEST USER
         var receiverId = this.getString(R.string.financial_advisor_id) ?: ""
         if (currentUser.uid == receiverId) {
-            receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
+            receiverId = "TxBSjXMdY1dRxVOYN3JM4DGzXT73"
         }
         Log.d("MainActivity", "currentUser.uid: ${currentUser.uid}, receiverId: $receiverId")
 

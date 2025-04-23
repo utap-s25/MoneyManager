@@ -44,11 +44,14 @@ class MessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Get the current user ID
-        // TODO PROBABLY NEED TO REMOVE THIS TOO
         receiverId = context?.getString(R.string.financial_advisor_id) ?: ""
         currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        // TODO IMPLEMENT UI FOR MONEY MANAGER THAT PULLS ALL USERIDS
+        // THIS IS FUNCTIONALITY THAT IS EXCLUSIVE FOR THE MONEY MANAGER
+        // WE DIDN'T CREATE A SEPERATE UI FOR THE MONEY MANAGER TO KEEP TRACK OF THE MESSAGE COMPONENTS
+        // SO WE HARDCODED THIS TO POINT AT OUR TEST USER
         if (currentUserId == receiverId) {
-            receiverId = "ODNZCYCuUyTDLXQVeeOZZuMhg2E2"
+            receiverId = "TxBSjXMdY1dRxVOYN3JM4DGzXT73"
         }
         Log.d("MessagesFragment", "currentUserId: $currentUserId, receiverId: $receiverId")
         conversationId = if (currentUserId!! < receiverId) {
