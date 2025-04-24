@@ -35,7 +35,7 @@ class DashboardFragment : Fragment() {
     private val decimalFormat: DecimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
 
     init {
-        decimalFormat.applyPattern("#,###.00")
+        decimalFormat.applyPattern("#,##0.00");
     }
 
     override fun onCreateView(
@@ -81,8 +81,6 @@ class DashboardFragment : Fragment() {
             if (widgetName == "Overview") {
                 titleTextView?.gravity = Gravity.CENTER
                 createOverViewWidget(widgetView)
-            } else if (widgetName == "Budget") {
-                //createBudgetWidget(widgetView)
             } else if (widgetName == "Spending") {
                 createSpendingWidget(widgetView)
             } else if (widgetName == "Balances") {
@@ -208,29 +206,6 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun createBudgetWidget(widgetView: View) {
-        val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
-        val budgetViewModel = ViewModelProvider(requireActivity())[BudgetViewModel::class.java]
-
-        val onCreateRemainingBudget = budgetViewModel.remainingBudget.value
-        contentContainer.text = "$onCreateRemainingBudget"
-        budgetViewModel.remainingBudget.observe(viewLifecycleOwner, Observer { remainingBudget ->
-            // Update the TextView with the current remaining budget value
-            contentContainer.text = "$${decimalFormat.format(remainingBudget)}"
-            if (remainingBudget > 0) {
-                contentContainer.setTextColor(resources.getColor(android.R.color.holo_green_dark, null))
-            } else {
-                contentContainer.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
-            }
-        })
-
-        widgetView.setOnClickListener {
-            // Navigate to the Budget screen
-            findNavController().popBackStack()
-            findNavController().navigate(R.id.navigation_budget)
-        }
-    }
-
     // Function to handle the "Spending" widget
     private fun createSpendingWidget(widgetView: View) {
         val contentContainer = widgetView.findViewById<TextView>(R.id.widget_content)
@@ -241,7 +216,7 @@ class DashboardFragment : Fragment() {
         spendingViewModel.totalSpending.observe(viewLifecycleOwner, Observer { totalSpending ->
             // Update the TextView with the current remaining budget value
             contentContainer.text = "$${decimalFormat.format(totalSpending)}"
-            contentContainer.setTextColor(android.graphics.Color.RED)
+            contentContainer.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
         })
 
         val transactionRepo = TransactionRepo(requireContext())
