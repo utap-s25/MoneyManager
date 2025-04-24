@@ -32,15 +32,6 @@ class BudgetViewModel : ViewModel() {
 
     val remainingBudget: LiveData<Float> = _remainingBudget
 
-    // Function to update the total budget
-    fun setTotalBudget(totalBudget: Float) {
-        _totalBudget.value = totalBudget
-    }
-
-    // Function to update spending
-    fun updateSpending(spending: Float) {
-        _spending.value = spending
-    }
 
     // This is internal logic to update the remaining budget
     private fun updateRemainingBudget(totalBudget: Float, spending: Float) {

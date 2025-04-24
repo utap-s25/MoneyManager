@@ -118,7 +118,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "moneymanager.db"
-        private const val DATABASE_VERSION = 16
+        private const val DATABASE_VERSION = 17
 
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_ACCOUNTS = "accounts"
